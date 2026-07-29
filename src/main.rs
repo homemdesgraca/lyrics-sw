@@ -7,6 +7,7 @@ mod library_handler;
 mod requests_handler;
 mod declarations;
 
+/// lyrics-sw is a minimal, Rust-based CLI tool to fetch lyrics for your local music library.
 #[derive(Parser, Debug)]
 #[command(version, about)]
 struct Args {
