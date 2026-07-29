@@ -38,10 +38,16 @@ cargo build --release # make sure cargo is installed on your system
 ---
 ## how to use
 
-### 1 - run the binary on your favorite terminal
-### 2 - input your path
-### 3 - wait
-### 4 - that's it.
+### 1 - run the binary with your local library path:
+```bash
+lyrics-sw.exe /path/to/music/library # Windows
+```
+```sh
+chmod +x lyrics-sw # Linux
+./lyrics-sw /path/to/music/library
+```
+### 2 - wait
+### 3 - that's it.
 
 ---
 ## support these amazing projects s2
