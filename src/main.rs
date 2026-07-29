@@ -2,6 +2,8 @@ use std::{error::Error, path::{PathBuf}};
 
 mod input_handler;
 mod library_handler;
+mod requests_handler;
+mod declarations;
 
 fn main() -> Result<(), Box<dyn Error>> {
 
@@ -11,9 +13,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let missing_lyrics: Vec<PathBuf> = library_handler::get_missing_lyrics(all_songs);
 
-    dbg!(missing_lyrics);
+    requests_handler::request_lyrics(missing_lyrics)?;
 
-    todo!();
+    println!("Done.");
+
+    Ok(())
 
 }
-

@@ -1,8 +1,11 @@
 use std::error::Error;
 use std::path::{Path, PathBuf};
+use std::fs;
+
+use walkdir::WalkDir;
+
 use lofty::file::EXTENSIONS;
 use lofty::{prelude::*};
-use walkdir::WalkDir;
 use lofty::read_from_path;
 
 pub fn get_files(path: PathBuf) -> Result<Vec<PathBuf>, Box<dyn Error>> {
@@ -53,4 +56,13 @@ pub fn get_missing_lyrics(songs: Vec<PathBuf>) -> Vec<PathBuf> {
 
 fn lrc_check(song: &Path) -> bool {
     song.with_extension("lrc").is_file()
+}
+
+pub fn write_lrc(song_path: &Path, lyrics: &str) -> Result<(), Box<dyn Error>> {
+    
+    let lrc_path = song_path.with_extension("lrc");
+    fs::write(lrc_path, lyrics)?;
+
+    Ok(())
+
 }
