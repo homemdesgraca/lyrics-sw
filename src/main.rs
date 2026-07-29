@@ -1,4 +1,4 @@
-use std::{error::Error, path::{Path, PathBuf}};
+use std::{error::Error, path::{PathBuf}};
 
 mod input_handler;
 mod library_handler;
