@@ -59,7 +59,7 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
 
 fn build_client() -> Result<request::Client, reqwest::Error> {
     request::Client::builder()
-    .user_agent("lyrics-sw (currently private; by https://github.com/homemdesgraca)")
+    .user_agent("lyrics-sw (https://github.com/homemdesgraca/lyrics-sw)")
     .build()
 }
 

@@ -47,3 +47,7 @@ cargo build --release # make sure cargo is installed on your system
 ## support these amazing projects s2
 - [lofty-rs](https://github.com/Serial-ATA/lofty-rs)
 - [lrclib](https://lrclib.net/)
+
+---
+## note
+this is my first finished rust project ever. ignore the non-perfect code.
