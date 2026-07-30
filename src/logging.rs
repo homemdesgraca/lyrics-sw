@@ -28,12 +28,6 @@ pub fn log_debug_display(text: impl Display) {
     }
 }
 
-pub fn log_debug(text: impl Debug) {
-    if is_debug_enabled() {
-    println!("{} {:#?}", "DEBUG:".style(DEBUG_STYLE_BOLD), text.style(DEBUG_STYLE))
-    }
-}
-
 pub fn line_break() {
     let line_break = "---------------".style(LINE_BREAK);
     println!("{}", line_break)

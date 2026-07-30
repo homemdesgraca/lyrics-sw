@@ -44,7 +44,7 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
 
         let get_request = construct_get_request(&track_name, &artist, &album, &duration);
 
-        log_debug(format!("Request sent to lrclib: {}", get_request));
+        log_debug_display(format!("Request sent to lrclib: {}", get_request));
 
         let response = match client.get(get_request).send() {
             Ok(value) => value,
