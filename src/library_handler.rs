@@ -44,7 +44,8 @@ pub fn get_missing_lyrics(songs: Vec<PathBuf>) -> Vec<PathBuf> {
             Ok(value) => value,
             Err(err) => {
                 log_error(err); 
-                continue;},
+                continue;
+            },
         };
 
         if let Some(tagged) = song_entry.primary_tag() {

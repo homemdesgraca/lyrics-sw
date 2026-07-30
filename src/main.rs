@@ -1,15 +1,15 @@
-use logging::*;
-use crate::declarations::*;
-
-use std::{error::Error, path::{PathBuf}};
-
-use clap::Parser;
-
 mod input_handler;
 mod library_handler;
 mod requests_handler;
 mod declarations;
 mod logging;
+
+use logging::*;
+use declarations::*;
+
+use std::{error::Error, path::{PathBuf}};
+
+use clap::Parser;
 
 /// lyrics-sw is a minimal, Rust-based CLI tool to fetch lyrics for your local music library.
 #[derive(Parser, Debug)]
@@ -17,17 +17,25 @@ mod logging;
 struct Args {
     /// Path to music library
     path: PathBuf,
+
+    /// Use this flag to display more information about what lyrics-sw is doing
+    #[arg(short, long, default_value_t = false)]
+    debug: bool
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
 
     let args = Args::parse();
 
+    if args.debug {
+        toggle_debug_mode();
+    }
+
     let library_path = args.path;
 
     if !input_handler::is_valid_path(&library_path) {
         let log_text = format!("'{}' is not a valid directory.", library_path.to_string_lossy());
-        log_error(log_text);
+        log_error_display(log_text);
         return Ok(());
     }
 

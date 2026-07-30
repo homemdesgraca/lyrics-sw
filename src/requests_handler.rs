@@ -13,7 +13,7 @@ use lofty::{read_from_path};
 
 use urlencoding::encode;
 
-const LRCLIB_URL: &str = "https://lrclib.net/";
+const LRCLIB_URL: &str = "https://lrclib.net";
 
 pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
 
@@ -32,7 +32,7 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
         let properties = match song_entry.primary_tag() {
             Some(tagged) => get_properties(tagged),
             None => {
-                log_error(format!("{} is not properly tagged (missing title, artist or album.", song.to_string_lossy()));
+                log_error_display(format!("{} is not properly tagged (missing title, artist or album.", song.to_string_lossy()));
                 continue;
             }
         };
@@ -44,9 +44,23 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
 
         let get_request = construct_get_request(&track_name, &artist, &album, &duration);
 
-        let response = client.get(get_request).send()?;
+        log_debug(format!("Request sent to lrclib: {}", get_request));
 
-        let response_lyrics: LyricsResponse = response.json()?;
+        let response = match client.get(get_request).send() {
+            Ok(value) => value,
+            Err(err) => {
+                log_error(err);
+                continue;
+            }
+        };
+
+        let response_lyrics: LyricsResponse = match response.json::<LyricsResponse>() {
+            Ok(value) => value,
+            Err(err) => {
+                log_error(err);
+                continue;
+            }
+        };
 
         let lyrics = match &response_lyrics.synced_lyrics {
             Some(value) => {
@@ -61,7 +75,7 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
                         value
                     },
                     None => {
-                        log_error(format!("Couldn't find lyrics for {} by {}. Ignoring...", track_name, artist));
+                        log_error_display(format!("Couldn't find lyrics for {} by {}. Ignoring...", track_name, artist));
                         continue;
                     }
             }}
