@@ -62,6 +62,8 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
             }
         };
 
+        log_debug_display(format!("Raw JSON response from lrclib: {:#?}", response_lyrics));
+
         let lyrics = match &response_lyrics.synced_lyrics {
             Some(value) => {
                         log_info(format!("Found synced lyrics for {} by {}!", track_name, artist));
@@ -86,7 +88,9 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
                 log_info(format!("Successfully wrote a .lrc file alongside {}.", song.to_string_lossy()));
                 increment_success_counter();
             },
-            Err(err) => log_error(err),
+            Err(err) => {
+                log_error(err);
+            },
         }
 
     }

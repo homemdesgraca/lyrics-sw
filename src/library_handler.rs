@@ -61,6 +61,7 @@ pub fn get_missing_lyrics(songs: Vec<PathBuf>) -> Vec<PathBuf> {
     missing_lyrics
 }
 
+// check if there's a lrc file alongside the song
 fn lrc_check(song: &Path) -> bool {
     song.with_extension("lrc").is_file()
 }
