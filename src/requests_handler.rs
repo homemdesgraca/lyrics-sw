@@ -1,5 +1,6 @@
-use crate::declarations;
+use crate::declarations::*;
 use crate::library_handler;
+use crate::logging::*;
 
 use std::path::PathBuf;
 use std::error::Error;
@@ -22,33 +23,56 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
 
         let song_entry = match read_from_path(&song) {
             Ok(value) => value,
-            Err(_) => continue
+            Err(err) => {
+                log_error(err);
+                continue;
+            }
         };
 
         let properties = match song_entry.primary_tag() {
             Some(tagged) => get_properties(tagged),
-            None => continue
+            None => {
+                log_error(format!("{} is not properly tagged (missing title, artist or album.", song.to_string_lossy()));
+                continue;
+            }
         };
         
         let (track_name, artist, album) = properties;
         let duration = song_entry.properties().duration().as_secs();
-        let get_request = construct_get_request(track_name, artist, album, duration);
+
+        log_warn(format!("Requesting lyrics for {} by {}...", track_name, artist));
+
+        let get_request = construct_get_request(&track_name, &artist, &album, &duration);
 
         let response = client.get(get_request).send()?;
 
-        let response_lyrics: declarations::LyricsResponse = response.json()?;
+        let response_lyrics: LyricsResponse = response.json()?;
 
         let lyrics = match &response_lyrics.synced_lyrics {
-            Some(value) => value,
-            None => match &response_lyrics.plain_lyrics {
-                Some(value) => value,
-                None => continue
-            }
+            Some(value) => {
+                        log_info(format!("Found synced lyrics for {} by {}!", track_name, artist));
+                        value
+                    }
+            None => {
+                log_warn(format!("Couldn't find synced lyrics for {} by {}. Trying unsynced lyrics...", track_name, artist));
+                match &response_lyrics.plain_lyrics {
+                    Some(value) => {
+                        log_info(format!("Found unsynced lyrics for {} by {}!", track_name, artist));
+                        value
+                    },
+                    None => {
+                        log_error(format!("Couldn't find lyrics for {} by {}. Ignoring...", track_name, artist));
+                        continue;
+                    }
+            }}
         };
 
         match library_handler::write_lrc(&song, lyrics) {
-            Ok(_) => println!("Successfully wrote a .lrc file alongside {}.", song.to_string_lossy()),
-            Err(err) => println!("Error: {}", err)
+            Ok(_) => {
+                log_info(format!("Successfully wrote a .lrc file alongside {}.", song.to_string_lossy()));
+                increment_success_counter();
+            },
+            Err(err) => log_error(err),
         }
 
     }
@@ -71,13 +95,13 @@ fn get_properties(song_tagged: &Tag) -> (String, String, String) {
     )
 }
 
-fn construct_get_request(track_name: String, artist: String, album: String, duration_secs: u64) -> String {
+fn construct_get_request(track_name: &str, artist: &str, album: &str, duration_secs: &u64) -> String {
 
     let request = format!(
     "{LRCLIB_URL}/api/get?artist_name={}&track_name={}&album_name={}&duration={}",
-    encode(&artist),
-    encode(&track_name),
-    encode(&album),
+    encode(artist),
+    encode(track_name),
+    encode(album),
     duration_secs,
     );
 

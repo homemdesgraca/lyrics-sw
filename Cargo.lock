@@ -800,6 +800,7 @@ version = "0.1.1"
 dependencies = [
  "clap",
  "lofty",
+ "owo-colors",
  "reqwest",
  "serde",
  "urlencoding",
@@ -865,6 +866,12 @@ name = "openssl-probe"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c87def4c32ab89d880effc9e097653c8da5d6ef28e6b539d313baaacfbafcbe"
+
+[[package]]
+name = "owo-colors"
+version = "4.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d211803b9b6b570f68772237e415a029d5a50c65d382910b879fb19d3271f94d"
 
 [[package]]
 name = "paste"

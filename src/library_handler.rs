@@ -1,3 +1,5 @@
+use crate::logging::*;
+
 use std::error::Error;
 use std::path::{Path, PathBuf};
 use std::fs;
@@ -40,17 +42,21 @@ pub fn get_missing_lyrics(songs: Vec<PathBuf>) -> Vec<PathBuf> {
 
         let song_entry = match read_from_path(&song) {
             Ok(value) => value,
-            Err(_) => continue
+            Err(err) => {
+                log_error(err); 
+                continue;},
         };
 
         if let Some(tagged) = song_entry.primary_tag() {
             match tagged.get_string(ItemKey::Lyrics) {
                 Some(_) => continue,
-                None => missing_lyrics.push(song)
+                None => {
+                    log_warn(format!("'{}' doesn't have lyrics and lyrics-sw will soon fetch it.", song.to_string_lossy()));
+                    missing_lyrics.push(song);
+                }
             }
         }
     }
-
     missing_lyrics
 }
 
