@@ -9,7 +9,7 @@ pub fn log_error_display(text: impl Display) {
 }
 
 pub fn log_error(text: impl Debug) {
-    println!("{} {:#?}", "DEBUG:".style(ERROR_STYLE_BOLD), text.style(ERROR_STYLE))
+    println!("{} {:#?}", "ERROR:".style(ERROR_STYLE_BOLD), text.style(ERROR_STYLE))
 }
 
 pub fn log_warn(text: impl Display) {
