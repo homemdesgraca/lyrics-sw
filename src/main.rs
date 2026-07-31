@@ -59,3 +59,28 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_counter() {
+    let before = get_success_counter();
+
+    increment_success_counter();
+
+    assert_eq!(get_success_counter(), before + 1);
+    }
+
+    #[test]
+    fn test_debug_mode() {
+    let original = is_debug_enabled();
+
+    toggle_debug_mode();
+    assert_ne!(original, is_debug_enabled());
+
+    toggle_debug_mode();
+    assert_eq!(original, is_debug_enabled());
+    }
+}

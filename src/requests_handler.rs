@@ -116,13 +116,32 @@ fn get_properties(song_tagged: &Tag) -> (String, String, String) {
 fn construct_get_request(track_name: &str, artist: &str, album: &str, duration_secs: &u64) -> String {
 
     let request = format!(
-    "{LRCLIB_URL}/api/get?artist_name={}&track_name={}&album_name={}&duration={}",
-    encode(artist),
+    "{LRCLIB_URL}/api/get?track_name={}&artist_name={}&album_name={}&duration={}",
     encode(track_name),
+    encode(artist),
     encode(album),
     duration_secs,
     );
 
     request
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn check_request_construction() {
+        let title_input = "test track";
+        let artist_input = "test artist";
+        let album_input = "test album";
+        let duration_input: u64 = 64;
+        let request_result = construct_get_request(title_input, artist_input, album_input, &duration_input);
+
+        let expected_result = format!("{LRCLIB_URL}/api/get?track_name={}&artist_name={}&album_name={}&duration={}", encode(title_input), encode(artist_input), encode(album_input), duration_input);
+
+        assert_eq!(request_result, expected_result);
+
+    }
 
 }
