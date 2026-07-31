@@ -101,7 +101,7 @@ pub fn request_lyrics(songs: Vec<PathBuf>) -> Result<(), Box<dyn Error>> {
 
 fn build_client() -> Result<request::Client, reqwest::Error> {
     request::Client::builder()
-    .user_agent("lyrics-sw (https://github.com/homemdesgraca/lyrics-sw)")
+    .user_agent(USER_AGENT)
     .build()
 }
 
@@ -132,16 +132,14 @@ mod tests {
 
     #[test]
     fn check_request_construction() {
-        let title_input = "test track";
-        let artist_input = "test artist";
-        let album_input = "test album";
+        let title_input = "test: track";
+        let artist_input = "test, artist & testing ! | hi |";
+        let album_input = "TESTING: Test Album";
         let duration_input: u64 = 64;
         let request_result = construct_get_request(title_input, artist_input, album_input, &duration_input);
 
         let expected_result = format!("{LRCLIB_URL}/api/get?track_name={}&artist_name={}&album_name={}&duration={}", encode(title_input), encode(artist_input), encode(album_input), duration_input);
 
         assert_eq!(request_result, expected_result);
-
     }
-
 }

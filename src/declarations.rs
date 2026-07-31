@@ -4,6 +4,9 @@ use owo_colors::{Style};
 use std::sync::atomic::{AtomicBool, AtomicUsize};
 use std::sync::atomic::Ordering;
 
+// user-agent declaration
+pub const USER_AGENT: &str = "lyrics-sw (https://github.com/homemdesgraca/lyrics-sw)";
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LyricsResponse {
